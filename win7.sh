@@ -2,9 +2,6 @@
 echo "SCRIPT AUTO INSTALL WINDOWS by HIDESSH"
 echo
 echo "Pilih OS yang ingin anda install"
-echo "[1] Windows 2019(Default)"
-echo "[2] Windows 2016"
-echo "[3] Windows 2012"
 echo "[4) Windows 10"
 echo "[5] Chat Ryan Untuk Add OS lain"
 
@@ -16,9 +13,6 @@ case "$PILIHOS" in
 	5) read -p "[?] Masukkan Link GZ mu : " PILIHOS;;
 	*) echo "[!] Pilihan salah"; exit;;
 esac
-
-echo "[*] Password yang saya buat sudah masuk wordlist bruteforce, silahkan masukkan password yang lebih aman!"
-read -p "[?] Masukkan password untuk akun Administrator Rdp anda(minimal 12 karakter) : " PASSADMIN
 
 IP4=$(curl -4 -s icanhazip.com)
 GW=$(ip route | awk '/default/ { print $3 }')
