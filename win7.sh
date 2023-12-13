@@ -19,6 +19,41 @@ case "$PILIHOS" in
 	*) echo "[!] Pilihan salah"; exit;;
 esac
 
+echo "[*] Password yang saya buat sudah masuk wordlist bruteforce, silahkan masukkan password yang lebih aman!"
+read -p "[?] Masukkan password untuk akun Administrator Rdp anda(minimal 12 karakter) : " PASSADMIN
+
+IP4=$(curl -4 -s icanhazip.com)
+GW=$(ip route | awk '/default/ { print $3 }')
+
+
+cat >/tmp/net.bat<<EOF
+@ECHO OFF
+cd.>%windir%\GetAdmin
+if exist %windir%\GetAdmin (del /f /q "%windir%\GetAdmin") else (
+echo CreateObject^("Shell.Application"^).ShellExecute "%~s0", "%*", "", "runas", 1 >> "%temp%\Admin.vbs"
+"%temp%\Admin.vbs"
+del /f /q "%temp%\Admin.vbs"
+exit /b 2)
+net user Administrator $PASSADMIN
+
+
+for /f "tokens=3*" %%i in ('netsh interface show interface ^|findstr /I /R "Local.* Ethernet Ins*"') do (set InterfaceName=%%j)
+netsh -c interface ip set address name="Ethernet Instance 0" source=static address=$IP4 mask=255.255.240.0 gateway=$GW
+netsh -c interface ip add dnsservers name="Ethernet Instance 0" address=8.8.8.8 index=1 validate=no
+netsh -c interface ip add dnsservers name="Ethernet Instance 0" address=8.8.4.4 index=2 validate=no
+
+cd /d "%ProgramData%/Microsoft/Windows/Start Menu/Programs/Startup"
+del /f /q net.bat
+exit
+EOF
+
 wget --no-check-certificate -O- $PILIHOS | gunzip | dd of=/dev/vda bs=3M status=progress
+
+mount.ntfs-3g /dev/vda2 /mnt
+cd "/mnt/ProgramData/Microsoft/Windows/Start Menu/Programs/"
+cd Start* || cd start*; \
+wget https://nixpoin.com/ChromeSetup.exe
+cp -f /tmp/net.bat net.bat
+cp -f /tmp/dpart.bat dpart.bat
 
 echo "reboot Rdp dulu mazzeh baru bisa pake"
