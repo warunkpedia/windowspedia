@@ -11,8 +11,6 @@ echo "[5] Chat Ryan Untuk Add OS lain"
 read -p "Pilih [1]: " PILIH OS
 
 case "$PILIHOS" in
-	1|"") PILIHOS="http://165.232.167.154/win7.gz";;
-	2) PILIHOS="http://165.232.167.154/win7.gz";;
 	3) PILIHOS="http://165.232.167.154/win7.gz";;
 	4) PILIHOS="http://165.232.167.154/win7.gz";;
 	5) read -p "[?] Masukkan Link GZ mu : " PILIHOS;;
@@ -24,7 +22,6 @@ read -p "[?] Masukkan password untuk akun Administrator Rdp anda(minimal 12 kara
 
 IP4=$(curl -4 -s icanhazip.com)
 GW=$(ip route | awk '/default/ { print $3 }')
-
 
 cat >/tmp/net.bat<<EOF
 @ECHO OFF
@@ -47,7 +44,7 @@ del /f /q net.bat
 exit
 EOF
 
-wget --no-check-certificate -O- $PILIHOS | gunzip | dd of=/dev/vda bs=3M status=progress
+wget --no-check-certificate -O- $PILIHOS | gunzip | dd of=/dev/sda bs=3M status=progress
 
 mount.ntfs-3g /dev/vda2 /mnt
 cd "/mnt/ProgramData/Microsoft/Windows/Start Menu/Programs/"
